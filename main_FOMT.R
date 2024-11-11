@@ -1,4 +1,7 @@
+# import FOMT 
 source("FOMT.R")
+
+# define test functions
 test_functions = function(x,i=0,sd=0.1,b=0.15){
   n = length(x)
   if(i==0){
@@ -55,12 +58,12 @@ test_functions = function(x,i=0,sd=0.1,b=0.15){
 # FOMT
 library(microbenchmark)
 library(tictoc)
-alpha = 0.05
-M = 100
-sd = 0.3
-n = c(400,800,1200,1600,2000,2400,2800,3200)
-R = 0.5
-scale = 0.6
+alpha = 0.05 # significance level
+M = 100 # number of repeatance of Monte-Carlo simulations
+sd = 0.3 # standard deviation
+n = c(400,800,1200,1600,2000,2400,2800,3200) # sample size
+R = 0.5 # number of repeatance for left and right searches, default R = 20
+scale = 0.6 # rescale parameter for the constant W, see FOMT paper for more details
 for (m in 1:8) {
   x = seq(1/n[m],1,1/n[m])
   for (i in 0:15) {
@@ -76,9 +79,10 @@ for (m in 1:8) {
   }
 }
 
-R = 0.1
-scale = 0.35
-scale_A = 0.05
+# A-FOMT
+R = 0.1 # number of repeatance for left and right searches, default R = 20
+scale = 0.35 # rescale parameter for the constant W, see FOMT paper for more details
+scale_A = 0.05 # rescale parameter for the constant $C_{\rho}$, see FOMT paper for more details
 for (m in 1:8) {
   x = seq(1/n[m],1,1/n[m])
   for (i in 0:15) {
