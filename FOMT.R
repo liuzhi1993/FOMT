@@ -106,7 +106,7 @@ LP = function(I,Y,h,beta,kernel,middel_weight){
   return(res)
 }
 
-adaptive_Lepskii = function(Y,A,kernel,kappa = 1.5,sd = 0.1, scale_A = 0.5){
+CALM = function(Y,A,kernel,kappa = 1.5,sd = 0.1, scale_A = 0.5){
   #print(scale_A)
   n = length(Y)
   M = ceiling_FOMT(4/5*log(n,4)+1/5*log(log(n),4)+1)
@@ -215,7 +215,7 @@ FOMT <- function(Y, alpha = 0.05, h = NA, beta = NA, L = 1, sd = 0.1,R = 20,
       A = which(A == TRUE)
       #toc()
       #tic()
-      res = adaptive_Lepskii(Y,A,kernel,kappa = 1.5,sd = sd, scale_A = scale_A)
+      res = CALM(Y,A,kernel,kappa = 1.5,sd = sd, scale_A = scale_A)
       Y_hat = res$est
       h = res$h_m
       #print(paste("m_bar = ", res$m_bar))
