@@ -1,6 +1,6 @@
 # FOMT 
 
-This repository contains the R functions `FOMT` for Fast Optimal Monontonicity Test. 
+This repository contains the R functions `FOMT` for Fast and Optimal Monontonicity Test. 
 
 ## Usage
 1. Download `FOMT.R` and `main_FOMT.R` to the same.
