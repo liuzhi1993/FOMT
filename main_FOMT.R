@@ -1,7 +1,4 @@
-# import FOMT 
 source("FOMT.R")
-
-# define test functions
 test_functions = function(x,i=0,sd=0.1,b=0.15){
   n = length(x)
   if(i==0){
@@ -17,7 +14,8 @@ test_functions = function(x,i=0,sd=0.1,b=0.15){
     res = 1 + x - 0.45*exp(-50*(x-0.5)^2)
   }
   if(i==4){
-    res = -1.5*sd*x
+    #res = -1.5*sd*x
+    res = -1.5*0.2*x
   }
   if(i==5){
     res = -0.2*exp(-50*(x-0.5)^2)
@@ -58,42 +56,48 @@ test_functions = function(x,i=0,sd=0.1,b=0.15){
 # FOMT
 library(microbenchmark)
 library(tictoc)
-alpha = 0.05 # significance level
-M = 100 # number of repeatance of Monte-Carlo simulations
-sd = 0.3 # standard deviation
-n = c(400,800,1200,1600,2000,2400,2800,3200) # sample size
-R = 0.5 # number of repeatance for left and right searches, default R = 20
-scale = 0.6 # rescale parameter for the constant W, see FOMT paper for more details
-for (m in 1:8) {
+alpha = 0.05
+M = 1000
+sd = 0.3
+n = c(400,800,1200,1600,2000,2400,2800,3200)
+R = 0.1
+scale = 0.58
+for (m in 1:length(n)) {
   x = seq(1/n[m],1,1/n[m])
-  for (i in 0:15) {
+  for (i in c(0,3,5,4,9)) { 
+    # Test functions 0, 3, 5, 4, 9 correspond to f0,f1,f2,f3 and f4 in our paper,
+    # respectively
     signal = test_functions(x,i,sd)
     res = 0
     tic()
     tm = microbenchmark(rejection = {res = res + FOMT(Y = signal+rnorm(n[m],0,sd), 
-                                                      alpha = alpha, beta = 1, sd = sd, R = R, scale = scale)},
+                                                      alpha = alpha, beta = 2, sd = sd, R = R, scale = scale)},
                         times = M, unit = "s")
     toc()
-    #saveRDS(tm,paste("Time of F",i," with size ",n[m],"scale = ", scale, "R =",R))
+    #saveRDS(tm,paste("New Time of F",i," with size ",n[m],"scale = ", scale, "R =",R))
     print(paste("Rejection of F",i," with size ",n[m], " = ", res))
   }
 }
 
-# A-FOMT
-R = 0.1 # number of repeatance for left and right searches, default R = 20
-scale = 0.35 # rescale parameter for the constant W, see FOMT paper for more details
-scale_A = 0.05 # rescale parameter for the constant $C_{\rho}$, see FOMT paper for more details
-for (m in 1:8) {
+R = 0.1
+scale = 1
+scale_A = 0.00175
+for (m in 8:length(n)) {
   x = seq(1/n[m],1,1/n[m])
-  for (i in 0:15) {
+  for (i in c(0,3,5,4,9)) {
     signal = test_functions(x,i,sd)
+    print(max(abs(diff(signal)*n[m])))
     res = 0
     tic()
     tm = microbenchmark(rejection = {res = res + FOMT(Y = signal+rnorm(n[m],0,sd), 
-                                                      alpha = alpha, beta = NA, sd = sd, R = R, scale = scale,scale_A = scale_A)},
+                                                      alpha = alpha, beta = NA, 
+                                                      sd = sd, R = R, scale = scale,
+                                                      scale_A = scale_A, power = 1.6,
+                                                      adaptivity = T)},
                         times = M, unit = "s")
     toc()
-    #saveRDS(tm,paste("LP Time of F",i," with size ",n[m],"scale = ", scale,"scale_A = ", scale_A, "R =", R))
+    #saveRDS(tm,paste("New LP Time of F",i," with size ",n[m],"scale = ", scale,"scale_A = ", scale_A, "R =", R))
     print(paste("LP Rejection of F",i," with size ",n[m], " = ", res))
   }
 }
+
