@@ -14,7 +14,8 @@ test_functions = function(x,i=0,sd=0.1,b=0.15){
     res = 1 + x - 0.45*exp(-50*(x-0.5)^2)
   }
   if(i==4){
-    res = -1.5*sd*x
+    #res = -1.5*sd*x
+    res = -1.5*0.2*x
   }
   if(i==5){
     res = -0.2*exp(-50*(x-0.5)^2)
@@ -48,6 +49,7 @@ test_functions = function(x,i=0,sd=0.1,b=0.15){
   }
   if(i==15){
     res = x -1.5*pnorm(4*x)
+    #res = (x-0.8)*(x<=0.05)+(x-0.05 -1.5*pnorm(4*(x-0.05)))*(x>0.05)
   }
   return(res)
 }
@@ -59,20 +61,25 @@ alpha = 0.05
 M = 100
 sd = 0.3
 n = c(400,800,1200,1600,2000,2400,2800,3200)
+critical_value = c(0.539159,0.619455,0.6031267,0.5985497,0.6984026,0.7130709,0.7081741,0.6296101)
+# critical values for n = 400, 800, 1200, 1600, 2000, 2400, 2800 and 3200.
 R = 100
+#c(0,3,5,4,9)
 for (m in 1:8) {
   x = seq(1/n[m],1,1/n[m])
-  print(n[m])
-  tic()
-  critical_value = Simulate_c(n = n[m], R = 100, type = 1)
-  print(c(n[m],critical_value))
-  toc()
-  for (i in c(3,7,4,15,0)) {
+  #print(n[m])
+  #tic()
+  #critical_value = Simulate_c(n = n[m], R = 100, type = 1)
+  #print(c(n[m],critical_value[m]))
+  #toc()
+  for (i in c(0,3,5,4,9)) {
+    # Test functions 0, 3, 5, 4, 9 correspond to f0,f1,f2,f3 and f4 in our paper,
+    # respectively
     signal = -test_functions(x,i,sd)
     res = 0 
     tic()
     tm = microbenchmark(rejection = {res = res + Phi_DS(Y = signal+rnorm(n[m],0,sd), 
-                                     sd = sd, type = 1, critical_value = critical_value)},
+                                     sd = sd, type = 1, critical_value = critical_value[m])},
                           times = M, unit = "s")
     toc()
     #saveRDS(tm,paste("DS 1 Time of F",i," with size ",n[m]))
@@ -80,7 +87,7 @@ for (m in 1:8) {
   }
 }
 
-for (m in 1:6) {
+for (m in 1:8) {
   x = seq(1/n[m],1,1/n[m])
   # tm_simulation = microbenchmark(Simulate_c(n = n[m],R = 100, type = 2),
   #                                times = 10, unit = "s")
@@ -89,8 +96,9 @@ for (m in 1:6) {
   tic()
   critical_value = Simulate_c(n = n[m], R = 100, type = 2)
   toc()
-  for (i in 0:15) {
-    signal = -test_functions(x,i,sd)
+  for (i in c(0,3,5,4,9)) {
+    # Test functions 0, 3, 5, 4, 9 correspond to f0,f1,f2,f3 and f4 in our paper,
+    # respectively    signal = -test_functions(x,i,sd)
     res = 0 
     tm = microbenchmark(rejection = {res = res + Phi_DS(Y = signal+rnorm(n[m],0,sd), 
                                                         sd = sd, type = 2, critical_value = critical_value)},
