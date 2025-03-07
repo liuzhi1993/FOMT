@@ -73,8 +73,8 @@ for (m in 1:8) {
   #print(c(n[m],c))
   #toc()
   c = cv[m]
-  for (i in c(0,3,5,4,15)) {
-    # Test functions 0, 3, 5, 4, 15 correspond to f0,f1,f2,f3 and f4 in our paper,
+  for (i in c(0,3,5,4,9)) {
+    # Test functions 0, 3, 5, 4, 9 correspond to f0,f1,f2,f3 and f4 in our paper,
     # respectively
     x = runif(n[m])
     signal = test_functions(x,i,sd)
