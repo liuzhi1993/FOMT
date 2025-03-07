@@ -64,8 +64,8 @@ R = 0.1
 scale = 0.58
 for (m in 1:length(n)) {
   x = seq(1/n[m],1,1/n[m])
-  for (i in c(0,3,5,4,9)) { 
-    # Test functions 0, 3, 5, 4, 9 correspond to f0,f1,f2,f3 and f4 in our paper,
+  for (i in c(0,3,5,4,15)) { 
+    # Test functions 0, 3, 5, 4, 15 correspond to f0,f1,f2,f3 and f4 in our paper,
     # respectively
     signal = test_functions(x,i,sd)
     res = 0
@@ -84,7 +84,7 @@ scale = 1
 scale_A = 0.00175
 for (m in 8:length(n)) {
   x = seq(1/n[m],1,1/n[m])
-  for (i in c(0,3,5,4,9)) {
+  for (i in c(0,3,5,4,15)) {
     signal = test_functions(x,i,sd)
     print(max(abs(diff(signal)*n[m])))
     res = 0
