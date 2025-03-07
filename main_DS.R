@@ -96,8 +96,8 @@ for (m in 1:8) {
   tic()
   critical_value = Simulate_c(n = n[m], R = 100, type = 2)
   toc()
-  for (i in c(0,3,5,4,15)) {
-    # Test functions 0, 3, 5, 4, 15 correspond to f0,f1,f2,f3 and f4 in our paper,
+  for (i in c(0,3,5,4,9)) {
+    # Test functions 0, 3, 5, 4, 9 correspond to f0,f1,f2,f3 and f4 in our paper,
     # respectively    signal = -test_functions(x,i,sd)
     res = 0 
     tm = microbenchmark(rejection = {res = res + Phi_DS(Y = signal+rnorm(n[m],0,sd), 
